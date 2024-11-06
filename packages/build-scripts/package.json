@@ -45,7 +45,7 @@
     "@types/fs-extra": "^8.0.1",
     "@types/jest": "^26.0.10",
     "@types/json5": "^0.0.30",
-    "@types/lodash": "^4.14.147",
+    "@types/lodash": "4.14.147",
     "@types/node": "^10",
     "@types/npmlog": "^4.1.2",
     "@types/react-dev-utils": "^9.0.1",
@@ -54,6 +54,6 @@
     "@types/webpack-chain": "^5.2.0",
     "package-json": "^6.5.0",
     "ts-jest": "^26.4.4",
-    "typescript": "^3.7.2"
+    "typescript": "^4.1.6"
   }
 }

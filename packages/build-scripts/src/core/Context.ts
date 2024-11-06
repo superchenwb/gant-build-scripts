@@ -352,7 +352,7 @@ class Context {
     if (fs.existsSync(configPath)) {
       try {
         config = fs.readJsonSync(configPath);
-      } catch (err) {
+      } catch (err: any) {
         log.info(
           'CONFIG',
           `Fail to load config file ${configPath}, use empty object`,
@@ -382,7 +382,7 @@ class Context {
         userConfig = isJsFile
           ? require(configPath)
           : JSON5.parse(fs.readFileSync(configPath, 'utf-8')); // read build.json
-      } catch (err) {
+      } catch (err: any) {
         log.info(
           'CONFIG',
           `Fail to load config file ${configPath}, use default config instead`,
@@ -457,7 +457,7 @@ class Context {
 
         try {
           fn = require(pluginPath); // eslint-disable-line
-        } catch (err) {
+        } catch (err: any) {
           log.error('CONFIG', `Fail to load plugin ${pluginPath}`);
           log.error('CONFIG', err.stack || err.toString());
           process.exit(1);
