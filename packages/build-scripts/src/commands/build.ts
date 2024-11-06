@@ -1,11 +1,16 @@
 import chalk from 'chalk';
-import Context, { CommandArgs, IPluginList, IGetBuiltInPlugins, ITaskConfig } from '../core/Context';
+import Context, {
+  CommandArgs,
+  IPluginList,
+  IGetBuiltInPlugins,
+  ITaskConfig,
+} from '../core/Context';
 import webpackStats from '../utils/webpackStats';
 
-import webpack = require('webpack')
-import fs = require('fs-extra')
-import path = require('path')
-import log = require('../utils/log')
+import webpack = require('webpack');
+import fs = require('fs-extra');
+import path = require('path');
+import log = require('../utils/log');
 
 export = async function({
   args,
@@ -19,7 +24,7 @@ export = async function({
   eject?: boolean;
   plugins?: IPluginList;
   getBuiltInPlugins?: IGetBuiltInPlugins;
-}): Promise<void | ITaskConfig []> {
+}): Promise<void | ITaskConfig[]> {
   const command = 'build';
 
   const context = new Context({
@@ -30,7 +35,10 @@ export = async function({
     getBuiltInPlugins,
   });
 
-  log.verbose('OPTIONS', `${command} cliOptions: ${JSON.stringify(args, null, 2)}`);
+  log.verbose(
+    'OPTIONS',
+    `${command} cliOptions: ${JSON.stringify(args, null, 2)}`,
+  );
 
   const { applyHook, rootDir: ctxRoot, webpack: webpackInstance } = context;
   let configArr = [];
@@ -83,26 +91,47 @@ export = async function({
   }
 
   const result = await new Promise((resolve, reject): void => {
-    // typeof(stats) is webpack.compilation.MultiStats
-    compiler.run((err, stats) => {
-      if (err) {
-        log.error('WEBPACK', (err.stack || err.toString()));
-        reject(err);
-        return;
-      }
-
-      const isSuccessful = webpackStats({
-        stats,
+    // 如果 --watch 参数存在，启用 Webpack watch 模式
+    if (args.watch) {
+      compiler.watch({}, (err: any, stats: any) => {
+        if (err) {
+          reject(err);
+          log.error('WEBPACK', 'Webpack watch error:', err);
+        } else {
+          const isSuccessful = webpackStats({
+            stats,
+          });
+          if (isSuccessful) {
+            resolve({
+              stats,
+            });
+          } else {
+            reject(new Error('webpack compile error'));
+          }
+        }
       });
-      if (isSuccessful) {
-        resolve({
+    } else {
+      // typeof(stats) is webpack.compilation.MultiStats
+      compiler.run((err: any, stats: any) => {
+        if (err) {
+          log.error('WEBPACK', err.stack || err.toString());
+          reject(err);
+          return;
+        }
+
+        const isSuccessful = webpackStats({
           stats,
         });
-      } else {
-        reject(new Error('webpack compile error'));
-      }
-    });
+        if (isSuccessful) {
+          resolve({
+            stats,
+          });
+        } else {
+          reject(new Error('webpack compile error'));
+        }
+      });
+    }
   });
 
   await applyHook(`after.${command}.compile`, result);
-}
+};

@@ -1,8 +1,8 @@
 import chalk from 'chalk';
 
-import webpack = require('webpack')
-import formatWebpackMessages = require('react-dev-utils/formatWebpackMessages')
-import log = require('./log')
+import webpack = require('webpack');
+import formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
+import log = require('./log');
 
 interface IUrls {
   lanUrlForTerminal: string;
@@ -37,7 +37,12 @@ const defaultOptions = {
   modules: false,
 };
 
-const webpackStats: IWebpackStats = ({ urls, stats, statsOptions = defaultOptions, isFirstCompile }) => {
+const webpackStats: IWebpackStats = ({
+  urls,
+  stats,
+  statsOptions = defaultOptions,
+  isFirstCompile,
+}) => {
   const statsJson = (stats as webpack.Stats).toJson({
     all: false,
     errors: true,
@@ -46,7 +51,9 @@ const webpackStats: IWebpackStats = ({ urls, stats, statsOptions = defaultOption
   });
   // compatible with webpack 5
   ['errors', 'warnings'].forEach((jsonKey: string) => {
-    (statsJson as any)[jsonKey] = ((statsJson as any)[jsonKey] || []).map((item: string | IJsonItem ) => ((item as IJsonItem).message || item));
+    (statsJson as any)[jsonKey] = ((statsJson as any)[jsonKey] || []).map(
+      (item: string | IJsonItem) => (item as IJsonItem).message || item,
+    );
   });
   const messages = formatWebpackMessages(statsJson);
   const isSuccessful = !messages.errors.length;
@@ -65,8 +72,14 @@ const webpackStats: IWebpackStats = ({ urls, stats, statsOptions = defaultOption
       if (isFirstCompile && urls) {
         console.log();
         log.info('WEBPACK', chalk.green('Starting the development server at:'));
-        log.info('   - Local  : ', chalk.underline.white(urls.localUrlForBrowser));
-        log.info('   - Network: ', chalk.underline.white(urls.lanUrlForTerminal));
+        log.info(
+          '   - Local  : ',
+          chalk.underline.white(urls.localUrlForBrowser),
+        );
+        log.info(
+          '   - Network: ',
+          chalk.underline.white(urls.lanUrlForTerminal),
+        );
         console.log();
       }
     } else if (messages.errors.length) {

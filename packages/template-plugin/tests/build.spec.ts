@@ -13,6 +13,8 @@ describe('simple build test suite', () => {
     });
   });
   test('check output source', () => {
-    expect(fs.existsSync(path.join(__dirname, 'fixtures/basic-spa/build/index.js')));
+    expect(
+      fs.existsSync(path.join(__dirname, 'fixtures/basic-spa/build/index.js')),
+    );
   });
 });

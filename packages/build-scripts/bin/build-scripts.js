@@ -11,15 +11,14 @@ const test = require('./test');
   // finish check before run command
   checkNodeVersion(packageInfo.engines.node);
 
-  program
-    .version(packageInfo.version)
-    .usage('<command> [options]');
+  program.version(packageInfo.version).usage('<command> [options]');
 
   program
     .command('build')
     .description('build project')
     .allowUnknownOption()
     .option('--config <config>', 'use custom config')
+    .option('--watch', 'run webpack in watch mode') // 添加 watch 参数
     .action(build);
 
   program

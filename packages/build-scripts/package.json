@@ -1,5 +1,5 @@
 {
-  "name": "@alib/build-scripts",
+  "name": "@gant/build-scripts",
   "version": "0.1.32",
   "license": "MIT",
   "description": "scripts core",
@@ -13,7 +13,7 @@
     "bin"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf lib/* && tsc",
     "prepublishOnly": "npm run build",
     "start": "tsc -w",
     "test": "jest"
@@ -51,6 +51,7 @@
     "@types/semver": "^6.2.0",
     "@types/webpack": "^4.39.8",
     "@types/webpack-chain": "^5.2.0",
+    "@types/node": "^10",
     "package-json": "^6.5.0",
     "ts-jest": "^26.4.4",
     "typescript": "^3.7.2"
